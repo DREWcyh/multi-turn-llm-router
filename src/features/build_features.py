@@ -58,13 +58,16 @@ def get_args():
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--recent-k", type=int, default=2)
     p.add_argument("--semantic-k", type=int, default=2)
+    p.add_argument("--output-name", default=None)
     p.add_argument("--max-samples", type=int, default=None)
     p.add_argument("--force", action="store_true")
     return p.parse_args()
 def main():
     args = get_args()
     out_dir = ensure_dir(args.output_dir)
-    tag = f"{args.strategy}_n{args.max_samples or 'all'}"
+    tag = args.output_name or f"{args.strategy}_n{args.max_samples or 'all'}"
+    if tag.endswith(".npz"):
+        tag = tag[:-4]
     npz_path = out_dir / f"{tag}.npz"
     meta_path = out_dir / f"{tag}.jsonl"
     if npz_path.exists() and meta_path.exists() and not args.force:
@@ -140,6 +143,8 @@ def main():
         feature_groups=np.array(fgroups),
         strategy=np.array([args.strategy]),
         embedding_model=np.array([args.embedding_model]),
+        recent_k=np.array([args.recent_k], dtype=np.int64),
+        semantic_k=np.array([args.semantic_k], dtype=np.int64),
     )
     with open(meta_path, "w", encoding="utf-8") as f:
         for r in rows:
