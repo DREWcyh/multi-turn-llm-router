@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 ```bash
 pip install -U huggingface_hub
-f
+
 export HF_ENDPOINT=https://hf-mirror.com
 hf download intfloat/multilingual-e5-small \
   --local-dir models/multilingual-e5-small
