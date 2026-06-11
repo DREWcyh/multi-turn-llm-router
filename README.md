@@ -20,6 +20,24 @@ scripts/           实验脚本
 pip install -r requirements.txt
 ```
 
+## 准备 encoder 模型
+
+本项目使用 `intfloat/multilingual-e5-small` 作为 sentence encoder。可以下载到本地：
+
+```bash
+pip install -U huggingface_hub
+f
+export HF_ENDPOINT=https://hf-mirror.com
+hf download intfloat/multilingual-e5-small \
+  --local-dir models/multilingual-e5-small
+```
+
+后面构建特征时使用：
+
+```text
+--embedding-model models/multilingual-e5-small
+```
+
 ## 数据预处理
 
 ```bash
@@ -66,6 +84,20 @@ PYTHONPATH=src python src/train_router.py \
 ./scripts/03_feature_ablation.sh
 ./scripts/04_single_feature_groups.sh
 ./scripts/05_gain_prediction.sh
+./scripts/06_5context_8model.sh
+./scripts/07_find_recent_semantic_k.sh
+```
+
+其中：
+
+```text
+01  比较 query only 下的 8 个分类模型
+02  比较 5 种上下文选择策略
+03  特征大类消融实验
+04  只使用某一类特征的实验
+05  gain 预测实验
+06  5 种上下文策略 × 8 个模型
+07  recent_semantic 中 recent_k 和 semantic_k 的搜索
 ```
 
 实验结果保存在：
